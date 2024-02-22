@@ -9,6 +9,8 @@ public class GameOfLife {
 
 	public static void main(String[] args) {
 		String fileName = args[0];
+		play(fileName);
+		
 		//// Uncomment the test that you want to execute, and re-compile.
 		//// (Run one test at a time).
 		//// test1(fileName);
@@ -27,8 +29,18 @@ public class GameOfLife {
 	// the count and cellValue functions.
 	private static void test2(String fileName) {
 		int[][] board = read(fileName);
-		//// Write here code that tests that the count and cellValue functions
-		//// are working properly, and returning the correct values.
+		// count for every element
+		for (int i = 1; i < board.length - 1; i++) {
+			for (int j = 1; j < board[0].length - 1; j++) {
+				System.out.println(count(board,i,j));				
+			}
+		}
+		// the values in the next generation
+		for (int i = 1; i < board.length - 1; i++) {
+			for (int j = 1; j < board[0].length - 1; j++) {
+				System.out.println(cellValue(board,i,j));				
+			}
+		}
 	}
 		
 	// Reads the data file, plays the game for Ngen generations, 
@@ -63,16 +75,30 @@ public class GameOfLife {
 		int rows = Integer.parseInt(in.readLine());
 		int cols = Integer.parseInt(in.readLine());
 		int[][] board = new int[rows + 2][cols + 2];
-		//// Replace the following statement with your code.
-		return null;
+		for (int i = 1; i < rows; i++) {
+			String line = in.readLine();
+			if (line != "" &&  line != null) {
+				for (int j = 0; j < line.length(); j ++) {
+					if (line.charAt(j) == 'x') {
+						board[i][j+1] = 1;
+					}
+				}
+			}
+		}
+		return board;
 	}
 	
 	// Creates a new board from the given board, using the rules of the game.
 	// Uses the cellValue(board,i,j) function to compute the value of each 
 	// cell in the new board. Returns the new board.
 	public static int[][] evolve(int[][] board) {
-		//// Replace the following statement with your code.
-		return null;
+		int[][] new_board = new int[board.length][board[0].length];
+		for (int i = 1; i < new_board.length - 1; i++) {
+			for (int j = 1; j < new_board[0].length - 1; j++) {
+				new_board[i][j] = cellValue(board,i,j);
+			}
+		}			
+		return new_board;
 	}
 
 	// Returns the value that cell (i,j) should have in the next generation.
@@ -85,8 +111,23 @@ public class GameOfLife {
 	// Assumes that j is at least 1 and at most the number of columns in the board - 1. 
 	// Uses the count(board,i,j) function to count the number of alive neighbors.
 	public static int cellValue(int[][] board, int i, int j) {
-		//// Replace the following statement with your code.
-		return 0;
+		int[][] new_board = new int[board.length][board[0].length];
+		if (board[i][j] == 0) {
+			if (count(board,i,j) == 3) {
+				new_board[i][j] = 1;
+			}
+		} else {
+			if (count(board,i,j) < 2) {
+				new_board[i][j] = 0;
+			}
+			if (count(board,i,j) >= 2 && count(board,i,j) <= 3) {
+				new_board[i][j] = 1;
+			}
+			if (count(board,i,j) > 3) {
+				new_board[i][j] = 0;
+			}
+		}
+		return new_board[i][j];
 	}
 	
 	// Counts and returns the number of living neighbors of the given cell
@@ -94,13 +135,29 @@ public class GameOfLife {
 	// Assumes that i is at least 1 and at most the number of rows in the board - 1. 
 	// Assumes that j is at least 1 and at most the number of columns in the board - 1. 
 	public static int count(int[][] board, int i, int j) {
-		//// Replace the following statement with your code.
-		return 0;
+		int count = 0;
+		for (int row = i-1; row <= i+1; row++) {
+			for (int col = j-1; col <= j+1; col++) {
+				count += board[row][col];
+			}
+		}
+		if (board[i][j] == 1) {
+			count--;
+		}
+		return count;
 	}
 	
 	// Prints the board. Alive and dead cells are printed as 1 and 0, respectively.
     public static void print(int[][] arr) {
-		//// Write your code here.
+		System.out.println();
+		int rows = arr.length;
+		int cols = arr[0].length;
+		for (int i = 1; i < rows - 1; i++) {
+			for (int j = 1; j < cols - 1; j++) {
+				System.out.printf("%2s", arr[i][j]);
+			}
+			System.out.println();	
+		}
 	}
 		
     // Displays the board. Living and dead cells are represented by black and white squares, respectively.
